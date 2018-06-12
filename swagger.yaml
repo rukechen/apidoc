@@ -1,0 +1,3916 @@
+swagger: '2.0'
+info:
+  title: QRM+ APIs
+  termsOfService: SW10(Ateam)
+  version: "1.0(2018.04.20)"
+  description: >-
+    # Authentication
+      Most QRM+ API operations require an authorization context and user permissions. Users are identified by an authentication token attached to the request headers.
+    ## AuthenticationToken
+      The system can authenticate the user with a generated authentication token which is valid for a limited time.</br>
+
+      <b>Example to get the authentication token</b>
+      Request
+      <pre><code>curl --header "Content-Type:application/json" -X POST -d '{"user":admin,"pwd":"pwd"}'  'http://192.168.1.100:8080/qrmplusapi/api/v1/account/login'</code></pre>
+      Response
+      <pre><code>{"username":"admin","is_qrm_user":true,"last_login_time":"2018-04-11 13:49:55","quick_start":true,"authPassed":true,"token":"eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJxcm1fdmVyc2lvbiI6ICIxLjAuMTAwIiwgInVzZXJfcm9sZSI6ICJBZG1pbiIsICJuYmYiOiAxNTIzNDI1Nzk1LCAidXNlcl9pZCI6IDEsICJsYXN0X2xvZ2luX3RpbWUiOiAiMjAxOC0wNC0xMSAxMzo0OTo1NSIsICJqdGkiOiAiaXRCakptTXJTMXN1dEtIaFVkSVBldz09IiwgIm1vZGlmeV90aW1lIjogIm1vZGlmeV90aW1lIiwgImV4cCI6IDE1MjM1MTIxOTUsICJpYXQiOiAxNTIzNDI1Nzk1LCAidXNlcl9uYW1lIjogImFkbWluIiwgInF0c190b2tlbiI6ICJlZWY1Zjk4ZGI5OTZmZjIwODdlY2VmNzgzZDFiMGY2YyJ9.izxeLTg98zP_Mp1LrNcqcQwzeiDqMGpf3T0M1XvjqrDoYCSnDJeMCIl1epZS6554gpO9Rg22O0tkSLetT_Vy5PrWx52D3XrFWGVd84fA2-fLIGeEo2AMU1mT38RMd_baAXL-fGSRJprz7lWmZjDoDXa4qIWY9xrK4dy9ihMGHcRQceorBAyzGXzchf7VDj5IqGBfv0WTSLnvoMwbHZgeNgitRKEE9CtG1WQe5McIytCrRGsGmLfLpjyR7F3hwvoiL_NQuRqgpznwF3OWtOUCNUhGKMAtgOXfXwDPIr9CUkyGgvsqUGfAqw5WK6XVdGu_lwTfPnnG_WwkHnhHhxxxxx","role":"Admin"}</code></pre>
+      After you get token, please follow API usage example to query API.</br></br>
+      
+      <b>Example to get the authentication token if 2nd authentication is enable(Login with security code)</b>
+
+      Login Response
+      <pre><code>{"username":"admin","lost_phone":1,"authPassed":false,"need_2sv":true}</code></pre>
+      <b>need_2sv</b> is true means 2nd authentication is enable, and <b>lost_phone</b> is 1 means send emergency e-mail that contains emergency security code(8 digits)</br></br>
+       <b>Step 1 Verify security code(6 digits)</b>
+       Request
+       <pre><code>curl --header "Content-Type:application/json" -X POST -d '{"user":admin,"pwd":"pwd","security_code":123456}'  'http://192.168.1.100:8080/qrmplusapi/api/v1/account/login'</code></pre>
+       Response
+       <pre><code>{"username":"admin","is_qrm_user":true,"last_login_time":"2018-04-11 13:49:55","quick_start":true,"authPassed":true,"token":"eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJxcm1fdmVyc2lvbiI6ICIxLjAuMTAwIiwgInVzZXJfcm9sZSI6ICJBZG1pbiIsICJuYmYiOiAxNTIzNDI1Nzk1LCAidXNlcl9pZCI6IDEsICJsYXN0X2xvZ2luX3RpbWUiOiAiMjAxOC0wNC0xMSAxMzo0OTo1NSIsICJqdGkiOiAiaXRCakptTXJTMXN1dEtIaFVkSVBldz09IiwgIm1vZGlmeV90aW1lIjogIm1vZGlmeV90aW1lIiwgImV4cCI6IDE1MjM1MTIxOTUsICJpYXQiOiAxNTIzNDI1Nzk1LCAidXNlcl9uYW1lIjogImFkbWluIiwgInF0c190b2tlbiI6ICJlZWY1Zjk4ZGI5OTZmZjIwODdlY2VmNzgzZDFiMGY2YyJ9.izxeLTg98zP_Mp1LrNcqcQwzeiDqMGpf3T0M1XvjqrDoYCSnDJeMCIl1epZS6554gpO9Rg22O0tkSLetT_Vy5PrWx52D3XrFWGVd84fA2-fLIGeEo2AMU1mT38RMd_baAXL-fGSRJprz7lWmZjDoDXa4qIWY9xrK4dy9ihMGHcRQceorBAyzGXzchf7VDj5IqGBfv0WTSLnvoMwbHZgeNgitRKEE9CtG1WQe5McIytCrRGsGmLfLpjyR7F3hwvoiL_NQuRqgpznwF3OWtOUCNUhGKMAtgOXfXwDPIr9CUkyGgvsqUGfAqw5WK6XVdGu_lwTfPnnG_WwkHnhHhxxxxx","role":"Admin"}</code></pre>
+       Ater you get token, please follow API usage example to query API.</br></br>
+      
+      <b>Example to get the authentication token if 2nd authentication is enable and lost_phone is 1(Login with Emergency security code)</b></br>
+
+      Login Response
+      <pre><code>{"username":"admin","lost_phone":1,"authPassed":false,"need_2sv":true}</code></pre>
+      <b>need_2sv</b> is true means 2nd authentication is enable, and <b>lost_phone</b> is 1 means send emergency e-mail that contains emergency security code(8 digits)</br></br>
+      
+      <b>Step 1 Send Emergency E-mail</b>
+       Since lost_phone is 1, you have to request an Emergency E-mail.
+       Request
+       <pre><code>curl --header "Content-Type:application/json" -X POST -d '{"user":admin,"pwd":"pwd", "send_mail":1}'  'http://192.168.1.100:8080/qrmplusapi/api/v1/account/login'</code></pre>
+       Response
+       <pre><code>{"username": "admin", "send_result": 1}</code></pre>
+       send_result is 1 means you will receieve a security code via E-mail within seconds.</br>
+       
+       <b>Step 2 Verify emergency security code(8 digits)</b>
+       Request
+       <pre><code>curl --header "Content-Type:application/json" -X POST -d '{"user":admin,"pwd":"pwd","security_code":12345678}'  'http://192.168.1.100:8080/qrmplusapi/api/v1/account/login'</code></pre>
+       Response
+       <pre><code>{"username":"admin","is_qrm_user":true,"last_login_time":"2018-04-11 13:49:55","quick_start":true,"authPassed":true,"token":"eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJxcm1fdmVyc2lvbiI6ICIxLjAuMTAwIiwgInVzZXJfcm9sZSI6ICJBZG1pbiIsICJuYmYiOiAxNTIzNDI1Nzk1LCAidXNlcl9pZCI6IDEsICJsYXN0X2xvZ2luX3RpbWUiOiAiMjAxOC0wNC0xMSAxMzo0OTo1NSIsICJqdGkiOiAiaXRCakptTXJTMXN1dEtIaFVkSVBldz09IiwgIm1vZGlmeV90aW1lIjogIm1vZGlmeV90aW1lIiwgImV4cCI6IDE1MjM1MTIxOTUsICJpYXQiOiAxNTIzNDI1Nzk1LCAidXNlcl9uYW1lIjogImFkbWluIiwgInF0c190b2tlbiI6ICJlZWY1Zjk4ZGI5OTZmZjIwODdlY2VmNzgzZDFiMGY2YyJ9.izxeLTg98zP_Mp1LrNcqcQwzeiDqMGpf3T0M1XvjqrDoYCSnDJeMCIl1epZS6554gpO9Rg22O0tkSLetT_Vy5PrWx52D3XrFWGVd84fA2-fLIGeEo2AMU1mT38RMd_baAXL-fGSRJprz7lWmZjDoDXa4qIWY9xrK4dy9ihMGHcRQceorBAyzGXzchf7VDj5IqGBfv0WTSLnvoMwbHZgeNgitRKEE9CtG1WQe5McIytCrRGsGmLfLpjyR7F3hwvoiL_NQuRqgpznwF3OWtOUCNUhGKMAtgOXfXwDPIr9CUkyGgvsqUGfAqw5WK6XVdGu_lwTfPnnG_WwkHnhHhxxxxx","role":"Admin"}</code></pre>
+       Ater you get token, please follow API usage example to query API.</br></br>
+
+      <b>Example to get the authentication token if 2nd authentication is enable and lost_phone is 2(Login with security question)</b></br>
+
+      Login Response
+      <pre><code>{"username":"admin","lost_phone":2,"authPassed":false,"need_2sv":true,"security_question_no":1}</code></pre>
+      <b>need_2sv</b> is true means 2nd authentication is enable, and <b>lost_phone</b> is 2 means emergency question handler</br></br>
+      
+      <b>Step 1 Security Question Authentication</b>
+       Since lost_phone is 2, you have to provide the answer to the question.
+       Request
+       <pre><code>curl --header "Content-Type:application/json" -X POST -d '{"user":admin,"pwd":"pwd", "security_answer":"xxx"}'  'http://192.168.1.100:8080/qrmplusapi/api/v1/account/login'</code></pre>
+       Response
+       <pre><code>{"username":"admin","is_qrm_user":true,"last_login_time":"2018-04-11 13:49:55","quick_start":true,"authPassed":true,"token":"eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJxcm1fdmVyc2lvbiI6ICIxLjAuMTAwIiwgInVzZXJfcm9sZSI6ICJBZG1pbiIsICJuYmYiOiAxNTIzNDI1Nzk1LCAidXNlcl9pZCI6IDEsICJsYXN0X2xvZ2luX3RpbWUiOiAiMjAxOC0wNC0xMSAxMzo0OTo1NSIsICJqdGkiOiAiaXRCakptTXJTMXN1dEtIaFVkSVBldz09IiwgIm1vZGlmeV90aW1lIjogIm1vZGlmeV90aW1lIiwgImV4cCI6IDE1MjM1MTIxOTUsICJpYXQiOiAxNTIzNDI1Nzk1LCAidXNlcl9uYW1lIjogImFkbWluIiwgInF0c190b2tlbiI6ICJlZWY1Zjk4ZGI5OTZmZjIwODdlY2VmNzgzZDFiMGY2YyJ9.izxeLTg98zP_Mp1LrNcqcQwzeiDqMGpf3T0M1XvjqrDoYCSnDJeMCIl1epZS6554gpO9Rg22O0tkSLetT_Vy5PrWx52D3XrFWGVd84fA2-fLIGeEo2AMU1mT38RMd_baAXL-fGSRJprz7lWmZjDoDXa4qIWY9xrK4dy9ihMGHcRQceorBAyzGXzchf7VDj5IqGBfv0WTSLnvoMwbHZgeNgitRKEE9CtG1WQe5McIytCrRGsGmLfLpjyR7F3hwvoiL_NQuRqgpznwF3OWtOUCNUhGKMAtgOXfXwDPIr9CUkyGgvsqUGfAqw5WK6XVdGu_lwTfPnnG_WwkHnhHhxxxxx","role":"Admin"}</code></pre>
+       Ater you get token, please follow API usage example to query API.</br></br>
+       
+
+    ## API usge example
+      Take alert setting for example.
+      curl --header "Content-Type:application/json" --header "Authorization: bearer {token}" 'http://{NAS_IP}:{NAS_PORT}/qrmplusapi/api/v1/alert/setting'
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  JWT:
+    type: apiKey
+    name: Authorization
+    in: header
+basePath: /qrmplusapi/api
+paths:
+  /v1/account/login:
+    post:
+      summary: Verify account & generate token
+      description: >- 
+        This API is for verifying the account and generating the token.</br>
+        Both Roles (Admin and Power User) can operate the API shown in this documentation.</br></br>
+        Note:</br>
+        Both authPassed and is_qrm_user need to be true, so that you can login QRM+ successfully.</br>
+        If authPassed is true, is_qrm_user is false. It means that you are not a QRM+ user, and you</br>
+        are not allowed to login.</br>
+      tags:
+        - Account
+      parameters:
+        - name: action
+          description: >-
+            <b>user(string)</b> - User name</br>
+            <b>pwd(string)</b> - the password encoded in  Base64</br>
+            <b>security_code(int)</b> - The security code generated by the authenticator app for 2-step verification (Ignore this field if verification is disable or verify the account via security answer)</br>
+            <b>security_answer(string)</b> - The security answer of 2-step verification (Ignore this field if verification is disable or verify the account via security code)</br>
+            <b>send_mail(int)</b> -  refer to the QTS documentation, this parameter is fixed at 1
+          in: body
+          schema:
+            $ref: '#/definitions/login_request'
+      responses:
+        '200':
+          description: >-
+            <b>authPassed(boolean)</b> - The entered account
+            passes the QTS account verification or not. (both authPassed and is_qrm_user need to be true in oerder to sucessfully login)</br> 
+            <b>is_qrm_user(boolean)</b> - The entered account is a legal QRM+
+            account or not. (both authPassed and is_qrm_user need to be true in oerder to sucessfully login)</br>
+            <b>last_login_time(string)</b> - Last login time for specified account. (example: "2018-02-14 10:22:22")</br>
+            <b>lost_phone(int)</b> - 1:send emergency e-mail that contains emergency security code(8 digits). 2:emergency question handler. </br>
+            <b>need_2sv(boolean)</b>- According to QTS login process, need_2sv is true means user enable 2nd verification.</br>
+            <b>quick_start(boolean)</b> - Used to show Add Device Wizard based on quick_start. (true: not to show Add device Wizard(Web Only)).</br>
+            <b>role(string)</b> - The role of entered account. ("Admin", "Power User")</br>
+            <b>security_question_no(int)</b> - question no. According to QTS API, 1: frontend will show "What is your pet's name?" ; 2: frontend will show "What is your favorite sport?"; 3: frontend will show "What is your favorite color?"; 4: Custom question</br>
+            <b>security_question_text(string)</b> - Custom question (only for "security_question_no" is 4)< /br>
+            <b>send_result(int)</b> - 1 means security code is sent to your email box successfully.</br>
+            <b>token(string)</b> - Verification token</br>
+            <b>username(string)</b> - The entered account name (The string value follows the length limitation of QTS system)
+          schema:
+            $ref: '#/definitions/login_response'
+        '401':
+          description: Unauthorized
+    get:
+      summary: Verify token
+      description: >-
+        This API is for verifying the token. For instance, when user refresh the
+        webpage inside the QRM+ system.</br>
+        Both Roles (Admin and Power User) can operate the API shown in this documentation.
+      security:
+        - JWT: []
+      tags:
+        - Account
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            <b>authPassed(boolean)</b> - The entered account
+            passes the QTS account verification or not. (both authPassed and is_qrm_user need to be true in oerder to sucessfully login)</br> 
+            <b>is_qrm_user(boolean)</b> - The entered account is a legal QRM+
+            account or not. (both authPassed and is_qrm_user need to be true in oerder to sucessfully login)</br>
+            <b>last_login_time(string)</b> - The NAS time of last login with the specified account. (example: "2018-02-14 10:22:22")</br>
+            <b>quick_start(boolean)</b> - Used to show Add Device Wizard based on quick_start. (true: not to show Add device Wizard(Web Only)).</br>
+            <b>role(string)</b> - The role of entered account. ("Admin", "Power User")</br>
+            <b>token(string)</b> - Verification token</br>
+            <b>username(string)</b> - The entered account name (The string value follows the length limitation of QTS system)
+          schema:
+            $ref: '#/definitions/login_response_get'
+        '401':
+          description: Unauthorized
+  /v1/devices:
+    get:
+      summary: Get device list
+      description: >-
+        This API is for getting the device list. </br>
+        <b>How to use filter parameter:</b></br>
+        curl --header "Content-Type:application/json" --header "Authorization: bearer {token}" 'http://{NAS_IP}:{WEB_PORT}/qrmplus/api/v1/devices?&filter=172.17.30.111'</br>
+        You can replace the filter value with hostname Ubuntu1404, e.g filter=Ubuntu1404.</br>
+        You can replace the filter value with device tag Office_2F, e.g filter=Office_2F.</br>
+        "filter" valuse is <b>case-insensitive</b>. It means that you can use filter=ubuntu or filter=Ubuntu.</br>
+        You can also search those devices which IP address contain 172.17.30 .
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Starting page number (default page is 1)
+          type: integer
+        - name: limit
+          in: query
+          description: The amount of devices shown in one page (default limit is 50)
+          type: integer
+        - name: filter
+          in: query
+          description: >- 
+            search for Hostname, IP address, Device tag </br>
+            example: /v1/devices?filter=&lt;feature&gt;, where &lt;feature&gt; can be Hostname, IP address or Device tag of specified device.
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>total(integer)</b> - Amount of the devices</br>
+            <b>device_id(integer)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br>
+            <b>device_type(string)</b> - Device type ("qagent", "ipmi")</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>device_mark(string)</b> - Device secure key for connection</br>
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>mgmt_tech(string)</b> - Management method ("qagent", "IPMI")</br>
+            <b>os(string)</b> - Device operation system</br>
+            <b>brand(string)</b> - Device brand</br>
+            <b>model(string)</b> - Device model</br>
+            <b>role(string)</b> - Device role</br>
+            <b>network_block(string)</b> - Specified device Subnet Mask</br>
+            <b>error_code(integer)</b> - Error code</br>
+            <b>distance(integer)</b> - Amount of the hub connecting to the device</br>
+            <b>status(integer)</b> - Device status (-1:"not_reach", 0:"off", 1:"on", 3:"install_fail", 4:"installing") </br>
+            <b>hide_status(integer)</b> - Used to show the staus at UI (0:"no show", 1:"show") </br>
+            <b>monitor_status(integer)</b> - Monitor status (0:"installed", 1:"uninstalled", 2:"installing", 3:"system checking") </br>
+            <b> error code number</b>:</br> 500101: Connection timed out.
+            Confirm that the device is powered on and is reachable.</br> 500102:
+            Unable to authenticate user. Confirm the administrator credentials
+            for this device. </br> 500104: Unable to read device configuration
+            data. Confirm that this device is supported by QRM+. You can try
+            reinstalling QRMAgent on this device. If this problem persists,
+            please contact the QNAP Support team. </br> 500105: Unable to find
+            SSH service on this device. </br> 500110: QRMAgent is not running on
+            this device. Confirm that it was installed correctly. </br> 500111:
+            Unable to read device configuration data. Confirm that this device
+            is supported by QRM+. You can try reinstalling QRMAgent on this
+            device. If this problem persists, please contact the QNAP Support
+            team. </br> 500112: Unable to install QRM+ on this Linux device. Try
+            adding the device again.</br> 500113: QRMAgent was installed on the
+            remote device but the service was unable to start. Try restarting
+            the device.</br> 500117: The remote server was too busy and was
+            unable to run the QRM+ initialization request. Try again later.</br>
+            500118: Your session has timed out. You must run the QRMAgent
+            installation package again on your remote device and complete all
+            the installation steps. </br> 500119: Connection timed out for this
+            IPMI device. Confirm that the device is powered on and is
+            reachable.</br> 500197: Unable to detect .Net Framework v4 (or
+            later) </br> 500198: Parameter error </br> 500199: Unknown error
+            </br> 500120: QRM+ does not support this IPMI device. Please contact
+            QNAP Support with your device information.</br> 500201: Connection
+            timed out. Confirm that the device is powered on and is
+            reachable.</br>
+          schema:
+            $ref: '#/definitions/device_list'
+        '401':
+          description: Unauthorized
+  '/v1/devices/{device_id}':
+    get:
+      summary: Get single device
+      description: This API is for getting the information of single device.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>device_id(integer)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br>
+            <b>device_type(string)</b> - Device type ("qagent", "ipmi")</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>device_mark(string)</b> - Device secure key for connection</br>
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>mgmt_tech(string)</b> - Management method ("qagent", "IPMI")</br>
+            <b>os(string)</b> - Device operation system</br>
+            <b>brand(string)</b> - Device brand</br>
+            <b>model(string)</b> - Device model</br>
+            <b>role(string)</b> - Device role</br>
+            <b>network_block(string)</b> - Specified device Subnet Mask</br>
+            <b>error_code(integer)</b> - Error code</br>
+            <b>distance(integer)</b> - Amount of the hub connecting to the device</br>
+            <b>status(integer)</b> - Device status (-1:"not_reach", 0:"off", 1:"on", 3:"install_fail", 4:"installing") </br>
+            <b>hide_status(integer)</b> - Used to show the staus at UI (0:"no show", 1:"show") </br>
+            <b>monitor_status(integer)</b> - Monitor status (0:"installed", 1:"uninstalled", 2:"installing", 3:"system checking") </br>
+            <b> error code number</b>:</br> 500101: Connection timed out.
+            Confirm that the device is powered on and is reachable.</br> 500102:
+            Unable to authenticate user. Confirm the administrator credentials
+            for this device. </br> 500104: Unable to read device configuration
+            data. Confirm that this device is supported by QRM+. You can try
+            reinstalling QRMAgent on this device. If this problem persists,
+            please contact the QNAP Support team. </br> 500105: Unable to find
+            SSH service on this device. </br> 500110: QRMAgent is not running on
+            this device. Confirm that it was installed correctly. </br> 500111:
+            Unable to read device configuration data. Confirm that this device
+            is supported by QRM+. You can try reinstalling QRMAgent on this
+            device. If this problem persists, please contact the QNAP Support
+            team. </br> 500112: Unable to install QRM+ on this Linux device. Try
+            adding the device again.</br> 500113: QRMAgent was installed on the
+            remote device but the service was unable to start. Try restarting
+            the device.</br> 500117: The remote server was too busy and was
+            unable to run the QRM+ initialization request. Try again later.</br>
+            500118: Your session has timed out. You must run the QRMAgent
+            installation package again on your remote device and complete all
+            the installation steps. </br> 500119: Connection timed out for this
+            IPMI device. Confirm that the device is powered on and is
+            reachable.</br> 500197: Unable to detect .Net Framework v4 (or
+            later) </br> 500198: Parameter error </br> 500199: Unknown error
+            </br> 500120: QRM+ does not support this IPMI device. Please contact
+            QNAP Support with your device information.</br> 500201: Connection
+            timed out. Confirm that the device is powered on and is
+            reachable.</br>
+          schema:
+            $ref: '#/definitions/device_info'
+        '400':
+          description: bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  '/v1/devices/detail/{device_id}':
+    get:
+      summary: Get specified device information in detail
+      description: This API is for getting information in detail from specified device.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>info</b> - The set of string value about the device information</br>
+            <b>network</b> - The set of string value about device network information</br>
+            <b>fru</b> - The set of string value about device hardware information (ipmi only, the value set is based on different IPMI manufaturers)</br>
+          schema:
+            $ref: '#/definitions/device_detail'
+
+        '400':
+          description: bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  '/v1/devices/metric/ipmi/{device_id}':
+    get:
+      summary: Get IPMI metric
+      description: >- 
+        This API is for getting the IPMI metric from specified IPMI device.</br></br>
+        {Lower_Critical, Lower_Non_Critical, Lower_Non_Recoverable, Upper_Critical, Upper_Non_Critical, Upper_Non_Recoverable} are the name of the threshold value defined by the IPMI standard and referenced by the occured event.</br>
+        Since it is not sure which parameters designed by different IPMI manufacturers are critical threshold, when plotting a graph, please take:</br>
+        &nbsp;&nbsp;Min(Lower_Critical, Lower_Non_Critical, Lower_Non_Recoverable) as a lowest point.</br>
+        &nbsp;&nbsp;Max(Upper_Critical, Upper_Non_Critical, Upper_Non_Recoverable) as a highest point.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>ipmi_sensors_id(integer)</b> - IPMI sensor ID</br>
+            <b>Lower_Critical(string)</b> - Lower critical</br>
+            <b>Lower_Non_Critical(string)</b> - Lower non critical</br>
+            <b>Lower_Non_Recoverable(string)</b> - Lower non recoverable</br>
+            <b>Unit(string)</b> - Unit</br>
+            <b>Upper_Critical(string)</b> - Upper critical</br>
+            <b>Upper_Non_Critical(string)</b> - Upper non critical</br>
+            <b>Upper_Non_Recoverable(string)</b> - Upper non recoverable</br>
+          schema:
+            $ref: '#/definitions/device_metric_ipmi'
+        '401':
+          description: Unauthorized
+  '/v1/devices/metric/qagent/{device_id}/{sensor_id}':
+    get:
+      summary: Get QRMAgent metric
+      description: >-
+        This API is for getting the QRMAgent metric from specified QRMAgent
+        device.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: sensor_id
+          in: path
+          description: ID of sensor to fetch</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve sensor_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>Example: eth0 </br>
+          schema:
+            $ref: '#/definitions/device_metric_qagent'
+        '401':
+          description: Unauthorized
+        '503':
+          description: Service Unavailable
+  '/v1/devices/sensors/{device_id}':
+    get:
+      summary: Get sensor information
+      description: This API is for getting the device sensors based on device id.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>sensor_type(string)</b> - Sensor type</br>
+            <b>metric(string)</b> - Sensor name</br>
+            <b>sensors_id(integer)</b> - IPMI sensor ID</br>
+          schema:
+            $ref: '#/definitions/device_sensors'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  /v1/devices/status/all:
+    get:
+      summary: Get a report for all device status
+      description: This API is for getting the summary for all device status.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>not_reach(integer)</b> - Amount of not-reach devices</br>
+            <b>off(integer)</b> - Amount of shutdown devices</br>
+            <b>on(integer)</b> - Amount of working devices</br>
+          schema:
+            $ref: '#/definitions/device_status_all'
+        '401':
+          description: Unauthorized
+  '/v1/livedata/{device_id}':
+    get:
+      summary: Get all live sensors data
+      description: >-
+        This API is for getting all live sensors data by a given device ID.</br>
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time(string)</b> - Time (format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+            <b>metric</b> - A set of string value containing various type of sensors and corresponding data value</br>
+          schema:
+            $ref: '#/definitions/live_data'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+  '/v1/livedata/{device_id}/{ipmi_metric}':
+    get:
+      summary: Get IPMI live sensors data
+      description: >-
+        This API is for getting IPMI live sensors data by a given device ID.</br>
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: ipmi_metric
+          in: path
+          description: >-
+            ipmi sensor name</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve ipmi_metric, example: "5VSB", "5VCC", etc.) 
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>Status(string)</b> - Sensor status</br>
+            <b>Upper_Non_Critical(string)</b> - Upper non critical</br>
+            <b>Lower_Non_Critical(string)</b> - Lower non critical</br>
+            <b>metric(string)</b> - Sensor name</br>
+            <b>Lower_Critical(string)</b> - Lower critical</br>
+            <b>value(string)</b> - Sensor parameter value</br>
+            <b>Upper_Non_Recoverable(string)</b> - Upper non recoverable</br>
+            <b>Upper_Critical(string)</b> - Upper critical</br>
+            <b>Lower_Non_Recoverable(string)</b> - Lower non recoverable</br>
+            <b>Unit(string)</b> - Unit </br>
+            <b>type_name(string)</b> - the name of device type ("ipmi")</br>
+            <b>time(string)</b> - Time (format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+          schema:
+            $ref: '#/definitions/live_ipmi_metric_data'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+  '/v1/livedata/{device_id}/memory_usage':
+    get:
+      summary: Get Memory usage live data
+      description: This API is for getting Memory usage live data by a given device ID.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time(string)</b> - Time (format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+            <b>metric(string)</b> - memory_usage</br>
+            <b>value(float)</b> - This field is used to describe memory usage percentage.</br>
+          schema:
+            $ref: '#/definitions/live_data_mem'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+  '/v1/livedata/{device_id}/memory_info':
+    get:
+      summary: Get Memory information live data
+      description: This API is for getting Memory information live data by a given device ID.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time(string)</b> -Time (format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+            <b>metric(string)</b> - Sensor name ("memory_info")</br>
+            <b>available(integer)</b> - Amount of the available memory capacity</br>
+            <b>total(integer)</b> - Amount of the total memory capacity</br>
+            <b>used(integer)</b> - Amount of the used memory capacity</br>
+            <b>free(integer)</b> - Amount of the free memory capacity</br>
+            <b>_usage(float)</b> - This field is used to describe memory usage percentage</br>
+          schema:
+            $ref: '#/definitions/live_data2'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+  '/v1/livedata/{device_id}/disk_usage':
+    get:
+      summary: Get Disk usage live data
+      description: This API is for getting disk usage live data by a given device ID.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time(string)</b> - Time (format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+            <b>metric(string)</b> - disk_usage</br>
+            <b>value(float)</b> - Disk usage percentage</br>
+          schema:
+            $ref: '#/definitions/live_data_disk'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+  '/v1/livedata/{device_id}/disks_io_info':
+    get:
+      summary: Get Disk I/O information live data
+      description: This API is for getting Disk I/0 information live data by a given device ID.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time(string)</b> - Time(format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+            <b>metric(string)</b> - disks_io_info</br>
+            <b>write_bytes(integer)</b> - Amount of writing bytes at specific time slot</br>
+            <b>name(string)</b> - This field is to describe disk partition.(For Example: vda1)</br>
+            <b>read_bytes(integer)</b> - Amount of reading bytes at specific time slot</br>
+          schema:
+            $ref: '#/definitions/live_data3'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+  '/v1/livedata/{device_id}/cpu_usage':
+    get:
+      summary: Get CPU usage live data
+      description: This API is for getting CPU usage live data by a given device ID.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time(string)</b> - the string value of the data time point (format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+            <b>metric</b> - cpu_usage</br>
+            <b>value(float)</b> - CPU usage percentage</br>
+          schema:
+            $ref: '#/definitions/live_data_cpu'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+  '/v1/livedata/{device_id}/network_io_info':
+    get:
+      summary: Get Network I/O information live data
+      description: This API is for getting Network I/O information live data by a given device ID.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time(string)</b> - Time (format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+            <b>metric(string)</b> - network_io_info</br>
+            <b>bytes_sent(string)</b> - Amount of bytes sent</br>
+            <b>name(string)</b> - Sepecified device network name</br>
+            <b>bytes_recv(string)</b> -Amount of bytes received</br>
+          schema:
+            $ref: '#/definitions/live_data4'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+  '/v1/livedata/{device_id}/volumes_info':
+    get:
+      summary: Get Volume information live data
+      description: This API is for getting Volume information live data by a given device ID.
+      security:
+        - JWT: []
+      tags:
+        - Device
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time(string)</b> - Time (format:"yyyy-mm-dd hh-mm-ss", example:"2018-01-11 14:26:46")</br>
+            <b>metric(string)</b> - volumes_info</br>
+            <b>name(string)</b> - Disk name</br>
+            <b>used(integer)</b> - Amount of used disk capacity</br>
+            <b>free<(integer)</b> - Amount of available disk capacity</br>
+            <b>total(integer)</b> - Amount of total disk capacity</br>
+            <b>percent(float)</b> - Disk usage percentage</br>
+          schema:
+            $ref: '#/definitions/live_data5'
+        '201':
+          description: Fetching
+        '401':
+          description: Unauthorized
+        '404':
+          description: specific device id or metric not found
+
+  /v1/alert/setting:
+    delete:
+      summary: Delete alert setting
+      description: This API is for removing alerts from system.
+      security:
+        - JWT: []
+      tags:
+        - Alert
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: action
+          description: <b>alert_setting_id(integer)</b> - Alert ID (The endpoint /v1/alert/setting with GET method is able to retrieve alert_setting_id)</br>
+          in: body
+          schema:
+            type: object
+            properties:
+              delete_alert_settings:
+                type: array
+                items:
+                  $ref: '#/definitions/delete_alert_setting'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+    get:
+      summary: Get alert setting list
+      description: This API is for getting the alert setting list.
+      security:
+        - JWT: []
+      tags:
+        - Alert
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Starting page number (default starting page is 1)
+          type: integer
+        - name: limit
+          in: query
+          description: The amount of alerts shown in one page (default limit is 50)
+          type: integer
+      responses:
+        '200':
+          description: >-
+            OK </br> <b>total(integer)</b> - Amount of the alerts</br>
+            <b>alert_setting_id(integer)</b> - Alert ID</br>
+            <b>alert_name(string)</b> - Alert name (The amount of characters are limited between 6 and 20)</br>
+            <b>alert_status(bollean)</b> - Alert status (true:"on", false:"off")</br>
+            <b>alert_type(string)</b> - Alert type ("ipmi", "qagent")</br>
+            <b>sensor_id(integer)</b> - Sensor ID (0:"None" - for IPMI, 1:"CPU", 2:"Memory"
+            3:"Power", 4:"Disk")</br>
+            <b>condition_symbol(string)</b> - Condition symbol ("<", "=", ">") </br>
+            <b>condition_value(integer)</b> - Condition value </br>
+            <b>device_id(integer)</b> - Device ID within specified alert </br>
+            <b>ip(string)</b> - Device IP within specified alert </br>
+            <b>hostname(string)</b> - Device hostname within specified alert </br>
+            <b>device_tag(string)</b> - Device tag within specified alert </br>
+            <b>mgmt_tech(string)</b> - Device management type ("ipmi", "qagent") within specified alert </br>
+            <b>brand(string)</b> - Device brand within specified alert </br>
+            <b>model(string)</b> - Device model within specified alert </br>
+            <b>os(string)</b> - Device operation system within specified alert </br>
+          schema:
+            type: object
+            properties:
+              total:
+                type: integer
+                example: 1
+              datas:
+                type: array
+                items:
+                  $ref: '#/definitions/alert_setting'
+        '401':
+          description: Unauthorized
+    post:
+      summary: Add alert setting
+      description:  >-
+        This API is for adding an alert into QRM+ system.</br>
+
+        ### Add one alert for CPU usage greater than 70
+        
+        <pre><code>{"add_alert_settings":[{"alert_name":"testalert","alert_type":"qagent","sensor_id":1,"condition_symbol":">","condition_value":70,"devices":[{"device_id":46}]}]}</code></pre>
+
+
+        ### Add one alert for power status from on to off
+        
+        <pre><code>{"add_alert_settings":[{"alert_name":"testalert","alert_type":"qagent","sensor_id":3,"condition_symbol":"&#60;","devices":[{"device_id":46}]}]}</code></pre>
+        
+        
+        ### Add one alert for power status from off to on
+        
+        <pre><code>{"add_alert_settings":[{"alert_name":"testalert","alert_type":"qagent","sensor_id":3,"condition_symbol":"=","devices":[{"device_id":46}]}]}</code></pre>
+        
+
+      security:
+        - JWT: []
+      tags:
+        - Alert
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: action
+          description:
+            <b>alert_name(string)</b> - Alert name (The amount of characters are limited between 6 and 20)</br>
+            <b>alert_type(string)</b> - Alert type ("ipmi", "qagent")</br>
+            <b>sensor_id(integer)</b> - Sensor ID (1 &#58; "CPU" - CPU usage, 2 &#58; "Memory" - Memory usage, 3 &#58; "Power" - Power status, 4 &#58; "Disk" - Disk usage). This field is "0" when alert_type is "ipmi".</br>
+            <b>condition_symbol(string)</b> - Condition symbol "&#60;", "&#61;", "&#62;". This field is ignored when alert_type is ipmi.</br>
+              When sensor_id isn't 3, "&#60;" means less than;  "&#61;" means equal to; "&#62;"  means larger than.</br>
+              If sensor_id is 3, "&#60;" means power on to power off; "&#61;" means power off to power on.</br>
+
+            <b>condition_value(integer)</b> - Condition value. This field is ignored when alert_type is ipmi.</br>
+            <b>devices</b> - A set of integer values of
+            device ID (The endpoint /v1/devices with GET method is able to retrieve device_id)</br>
+          in: body
+          schema:
+            type: object
+            properties:
+              add_alert_settings:
+                type: array
+                items:
+                  $ref: '#/definitions/add_alert_setting'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad request(object already exist)
+    put:
+      summary: Update alert setting
+      description: This API is for updating an alert based on <b>alert_setting_id.
+      security:
+        - JWT: []
+      tags:
+        - Alert
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: action
+          description: >-
+            <b>alert_setting_id(integer)</b> - Alert ID (The endpoint /v1/alert/setting with GET method is able to retrieve alert_setting_id)</br>
+            <b>alert_name(string)</b> - Alert name (The amount of characters are limited between 6 and 20)</br>
+            <b>alert_status(boolean)</b> - Alert status (true:"on", false:"off") </br>
+            <b>alert_type(string)</b> - Alert type ("ipmi", "qagent")</br>
+            <b>sensor_id(integer)</b> - Sensor ID (1:"CPU", 2:"Memory", 3:"Power", 4:"Disk"). This field is ignored when alert_type is ipmi.</br>
+            <b>condition_symbol(string)</b> - Condition symbol ("<", "=", ">"). This field is ignored when alert_type is ipmi.</br>
+            <b>condition_value(integer)</b> - Condition value. This field is ignored when alert_type is ipmi.</br>
+            <b>devices</b> - A set of integer values of device ID (The endpoint /v1/devices with GET method is able to retrieve device_id)</br>
+          in: body
+          schema:
+            type: object
+            properties:
+              update_alert_settings:
+                type: array
+                items:
+                  $ref: '#/definitions/update_alert_settings'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad request
+  /v1/logs/alert:
+    get:
+      summary: Get QRMAgent alert log
+      description: This API is for acquiring the QRMAgent logs.
+      security:
+        - JWT: []
+      tags:
+        - Logs
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: page
+          in: query
+          description: Starting page number (default page is 1)
+          type: number
+        - name: limit
+          in: query
+          description: The amount of logs shown in one page (default limit is 50)
+          type: number
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>off_time(string)</b> - Alert off time (format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>on_time(string)</b> - Alert trigger time (format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>description(string)</b> - Alert description</br>
+            <b>alert_status(string)</b> - Alert status (0:"off", 1:"on")</br>
+            <b>device_ip(string)</b> - Device IP</br> 
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>parameter(string)</b> - Monitored parameter ("cpu_usage", "memory_usage", "power_status", "disk_usage")</br>
+            <b>total(integer)</b> - Total alert logs</br>
+            <b>enable_count(integer)</b> - The amount of alerts is still on
+          schema:
+            $ref: '#/definitions/alerts_logs'
+        '401':
+          description: Unauthorized
+        '503':
+          description: Service unavailable
+  '/v1/logs/alert/{device_id}':
+    get:
+      summary: Get QRMAgent alert log
+      description: This API is for acquiring the QRMAgent logs with specified device.
+      security:
+        - JWT: []
+      tags:
+        - Logs
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: page
+          in: query
+          description: Starting page number (default page is 1)
+          type: number
+        - name: limit
+          in: query
+          description: The amount of logs shown in one page (default limit is 50)
+          type: number
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>off_time(string)</b> - Alert off time (format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>on_time(string)</b> - Alert trigger time (format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>description(string)</b> - Alert description</br>
+            <b>alert_status(string)</b> - Alert status (0:"off", 1:"on")</br>
+            <b>device_ip(string)</b> - Device IP</br> 
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>parameter(string)</b> - Monitored parameter ("cpu_usage", "memory_usage", "power_status", "disk_usage")</br>
+            <b>total(integer)</b> - Total alert logs</br>
+          schema:
+            $ref: '#/definitions/alerts_logs'
+        '401':
+          description: Unauthorized
+        '503':
+          description: Service unavailable
+  '/v1/logs/alert/{device_id}/{sensor_id}':
+    get:
+      summary: Get QRMAgent alert log
+      description: >-
+        This API is for acquiring the QRMAgent logs with specified device and
+        specified sensor.
+      security:
+        - JWT: []
+      tags:
+        - Logs
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: sensor_id
+          in: path
+          description: ID of sensor to fetch</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve sensor_id)
+          required: true
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: page
+          in: query
+          description: Starting page number (default page is 1)
+          type: number
+        - name: limit
+          in: query
+          description: The amount of logs shown in one page (default limit is 50)
+          type: number
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>off_time(string)</b> - Alert off time (format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>on_time(string)</b> - Alert trigger time (format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>description(string)</b> - Alert description</br>
+            <b>alert_status(string)</b> - Alert status (0:"off", 1:"on")</br>
+            <b>device_ip(string)</b> - Device IP</br> 
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>parameter(string)</b> - Monitored parameter ("cpu_usage", "memory_usage", "power_status", "disk_usage")</br>
+            <b>total(integer)</b> - The integer value of the total amount of alert log</br>
+          schema:
+            $ref: '#/definitions/alerts_logs'
+        '401':
+          description: Unauthorized
+        '503':
+          description: Service unavailable
+  /v1/logs/event:
+    get:
+      summary: Get IPMI event log
+      description: This API is for requiring all IPMI devices logs.
+      security:
+        - JWT: []
+      tags:
+        - Logs
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: page
+          in: query
+          description: Starting page number (default page is 1)
+          type: number
+        - name: limit
+          in: query
+          description: The amount of logs shown in one page (default limit is 50)
+          type: number
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time_stamp(string)</b> - Event trigger time at IPMI(format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>date_time(string)</b> - Event recording time at NAS(format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>description(string)</b> - Event description</br>
+            <b>device_id(string)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br> 
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>sensor_type(string)</b> - Sensor type</br>
+            <b>metric(string)</b> - Sensor name</br>
+            <b>total(integer)</b> - Total amount of event log</br>
+          schema:
+            $ref: '#/definitions/event_logs'
+        '401':
+          description: Unauthorized
+  '/v1/logs/event/{device_id}':
+    get:
+      summary: Get IPMI event log
+      description: This API is for requiring the IPMI logs with specified device.
+      security:
+        - JWT: []
+      tags:
+        - Logs
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: sname
+          in: query
+          description: sensor name</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve sname)
+          type: string
+        - name: stype
+          in: query
+          description: sensor type</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve stype)
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: page
+          in: query
+          description: Starting page number (default page is 1)
+          type: number
+        - name: limit
+          in: query
+          description: The amount of logs shown in one page (default limit is 50)
+          type: number
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time_stamp(string)</b> - Event trigger time at IPMI(format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>date_time(string)</b> - Event recording time at NAS(format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>description(string)</b> - Event description</br>
+            <b>device_id(string)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br> 
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>sensor_type(string)</b> - Sensor type</br>
+            <b>metric(string)</b> - Sensor name</br>
+            <b>total(integer)</b> - Total amount of event log</br>
+          schema:
+            $ref: '#/definitions/event_logs'
+        '401':
+          description: Unauthorized
+  '/v1/logs/event/{device_id}/{sensor_id}':
+    get:
+      summary: Get IPMI event log
+      description: >-
+        This API is for requiring the IPMI logs with specified device and
+        specified sensor.
+      security:
+        - JWT: []
+      tags:
+        - Logs
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: sensor_id
+          in: path
+          description: ID of sensor to fetch</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve sensor_id)
+          required: true
+          type: string
+        - name: sname
+          in: query
+          description: sensor name</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve sname)
+          type: string
+        - name: stype
+          in: query
+          description: sensor type</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve stype)
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          type: string
+        - name: page
+          in: query
+          description: Starting page number (default page is 1)
+          type: number
+        - name: limit
+          in: query
+          description: The amount of logs shown in one page (default limit is 50)
+          type: number
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time_stamp(string)</b> - Event trigger time at IPMI(format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>date_time(string)</b> - Event recording time at NAS(format: "yyyy-mm-dd hh-mm-ss", example: "2018-01-09 05:20:28")</br>
+            <b>description(string)</b> - Event description</br>
+            <b>device_id(string)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br> 
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>device_tag(string)</b> - Device tag. You can update device_tag by QRM+ web UI.</br>
+            <b>sensor_type(string)</b> - Sensor type</br>
+            <b>metric(string)</b> - Sensor name</br>
+            <b>total(integer)</b> - Total amount of event log</br>
+          schema:
+            $ref: '#/definitions/event_logs'
+        '401':
+          description: Unauthorized
+  '/v1/analysis/ipmi/{device_id}/{sensor_id}':
+    get:
+      summary: Historical data for IPMI sensor
+      description: >-
+        This API is for getting the IPMI historical data with specified device and
+        specified sensor.</br>
+      security:
+        - JWT: []
+      tags:
+        - Analysis
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch </br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: sensor_id
+          in: path
+          description: ID of sensor to fetch </br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve sensor_id)
+          required: true
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          required: true
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          required: true
+          type: string
+        - name: metric
+          in: query
+          description: sensor metric to fetch</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve metric)
+          required: false
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br> <b>yyyyMMddhhmmss(string)</b> - Data at each
+            time (format: {time:data value}, example: {20180104074140:
+            "4050.000"} )</br>
+            <b>lower_bound(string)</b> - Lower bound. This field is used to set the lower bound of the graph</br>
+            <b>upper_bound(string)</b> - Upper bound. This field is used to set the upper bound of the graph</br>
+            <b>unit(string)</b> - Data unit (example: "Volts")</br>
+          schema:
+            $ref: '#/definitions/analysis_ipmi_history'
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad request
+  '/v1/analysis/qagent/{device_id}/{sensor_id_without_info}':
+    get:
+      summary: Historical data for QRMAgent sensor
+      description: >-
+        This API is for getting the QRMAgent historical data with specified device
+        and specified sensor.</br> sensor: ("cpu_usage", "memory_usage", "power_status", "disk_usage")
+      security:
+        - JWT: []
+      tags:
+        - Analysis
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch </br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: sensor_id_without_info
+          in: path
+          description: ID of sensor to fetch</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve sensor_id_without_info)
+          required: true
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          required: true
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br> <b>yyyyMMddhhmmss(string)</b> - Data at each
+            time (format: {time:data value}, example: {20180104074140:
+            "0.4"} )</br>
+            <b>lower_bound(string)</b> - Lower bound. This field is used to set the lower bound of the graph.</br>
+            <b>upper_bound(string)</b> - Upper bound. This field is used to set the upper bound of the graph.</br>
+            <b>unit(string)</b> - Data unit (example: "%")</br>
+          schema:
+            $ref: '#/definitions/analysis_ipmi_history'
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad request
+  '/v1/analysis/qagent/{device_id}/{sensor_id_with_info}':
+    get:
+      summary: Historical data for QRMAgent sensor
+      description: >-
+        This API is for getting the QRMAgent historical data with specified device
+        and specified sensor.</br> sensor: ("memory_info", "network_io_info", "volumes_info", "disks_io_info"), and args metric is required.</br>
+      security:
+        - JWT: []
+      tags:
+        - Analysis
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device_id
+          in: path
+          description: ID of device to fetch</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+        - name: sensor_id_with_info
+          in: path
+          description: ID of sensor to fetch</br>(The endpoint /v1/devices/sensors/{device_id} with GET method is able to retrieve sensor_id_with_info)
+          required: true
+          type: string
+        - name: start_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          required: true
+          type: string
+        - name: end_time
+          in: query
+          description: 'example format: 2017-05-04 19:00:00'
+          required: true
+          type: string
+        - name: metric
+          in: query
+          description: sensor metric to fetch</br>(The endpoint /v1/devices/metric/qagent/{device_id}/{sensor_id} with GET method is able to retrieve metric)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>columns</b> - a set of string value about the title of the additional information</br>
+            <b>yyyyMMddhhmmss(string)</b> - Data at each time slot(format: {time:data value set}, example: 20180104075006: ["0", "2110", "2055", "3938", "0", "967"]} )</br>
+            <b>name(string)</b> - The name of the metric corresponding to the sensor (example: "PhysicalDrive0", when "disks_io_info" is selected)</br>
+          schema:
+            $ref: '#/definitions/analysis_qagent_info_history'
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad request
+  /v1/analysis/recentutil:
+    get:
+      summary: Get device list of utilized recently
+      description: >- 
+        This API is for getting the list of devices utilized recently (get top 10 by metric).</br>
+        "Recently" is based on QRM+ setting, default is 1 minute. You can configure this value by QRM+ Web UI.</br>
+      security:
+        - JWT: []
+      tags:
+        - Analysis
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: metric
+          in: query
+          description: sensor metric to fetch ("cpu_usage", "memory_usage", "disk_usage")
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>device_id(integer)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br>
+            <b>device_tag(string)</b> - Device tag. You can update device_tag by QRM+ web UI.</br>
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>value(string)</b> - Specified metric value</br>
+          schema:
+            $ref: '#/definitions/analysis_recentutil'
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad request
+  /v1/analysis/device/statuschange:
+    get:
+      summary: Get device list of status changed recently
+      description: >-
+        This API is for getting the list of devices&apos; status changed recently.</br>
+        "Recently" is based on QRM+ setting, default is 1 minute. You can configure this value by QRM+ Web UI.
+      security:
+        - JWT: []
+      tags:
+        - Analysis
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>device_id(integer)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>device_type(string)</b> - Device type ("qagent", "ipmi")</br>
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>start_time(string)</b> - Specified status changed time.(example format: "2018-01-03 02:11:31")</br>
+            <b>status(integer)</b> - Device status (0:"off", 1:"on", 2:"not reachable")</br>
+          schema:
+            $ref: '#/definitions/analysis_statuschange_list'
+        '401':
+          description: Unauthorized
+  /v1/analysis/device/shutdownlist:
+    get:
+      summary: Get device list of status shutdown recently
+      description: >-
+        This API is for getting the list of devices&apos; status shutdown recently.</br>
+        "Recently" is based on QRM+ setting, default is 1 minute. You can configure this value by QRM+ Web UI. 
+      security:
+        - JWT: []
+      tags:
+        - Analysis
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>device_id(integer)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br>
+            <b>device_tag(string)</b> - Device tag</br>
+            <b>device-type(string)</b> - Device management type ("ipmi", "qagent")</br>
+            <b>hostname(string)</b> - Device hostname</br>
+            <b>last_updated(string)</b> - Last update time that specified device updated its status.(example format: "2017-12-13 10:09:09")</br>
+          schema:
+            $ref: '#/definitions/analysis_shutdownlist_list'
+        '401':
+          description: Unauthorized
+  /v1/analysis/device/multimonitor:
+    get:
+      summary: Get device list with multi-value report
+      description: >- 
+        This API is for getting the list of devices with multi-value report.</br>
+        example: v1/analysis/device/multimonitor?device=<device_id>&device=<device_id>&device=<device_id>
+      security:
+        - JWT: []
+      tags:
+        - Analysis
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: device
+          in: query
+          description: A set of string value of device id selected to be monitored</br>(The endpoint /v1/devices with GET method is able to retrieve device_id)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>device_id(integer)</b> - Device ID</br>
+            <b>device_ip(string)</b> - Device IP</br>
+            <b>cpu_usage(string)</b> - CPU usage</br>
+            <b>memory_usage(string)</b> - Memory usage</br>
+            <b>disk_usage(string)</b> - Disk usage</br>
+          schema:
+            $ref: '#/definitions/analysis_multimonitor_list'
+        '400':
+          description: bad request
+        '401':
+          description: Unauthorized
+        '503':
+          description: internal service error
+  /v1/dashboards:
+    get:
+      summary: Query dashboard
+      description: >-
+        This API is for obtaining the dashboard as well as contained
+        widgets.</br>  Note: warning_threshold, critical_threshold are only
+        available on widget type of top10, gauge </br>
+
+        ## How to use the endpoint?
+
+        Request
+        <pre><code>curl --header "Authorization: bearer {token}" --header "Content-Type:application/json" -X GET 'http://192.168.1.100:8080/qrmplusapi/api/v1/dashboards'</code></pre>
+        Result
+        <pre><code>{"widgets":"[{\"type\":\"grid\",\"sub_type\":\"utilization\",\"polling_type\":\"historic\",\"device_id\":\"\",\"metric\":\"cpu_usage\",\"device_type\":\"qagent\",\"sortby\":\"top\",\"devices\":[],\"sensors_id\":1,\"warning_threshold\":60,\"critical_threshold\":80,\"dash_type\":\"main\",\"instance_id\":\"dashboard_grid3\",\"sub_metric_list\":[]}]","dash_type":"main","layout":2,"ui_dashboard_id":90}</code></pre>
+        
+        ### CPU Utilization(Top 10) Widget
+
+        According to above response, type is grid, sub_type is utilization and metric is cpu_usage mean that there is one widget called CPU utilization(Top 10). You can use endpoint <b>/v1/analysis/recentutil</b> to retrieve CPU utilization top 10 and display values on this widget.(Both Memory Utilization Top 10 and Disk Utilization Top 10 follow the same rule)
+        
+        ### Live Utilization Widget
+        
+        According to above response, type is areachart, sub_type is utilization, and polling_type is live mean that there is one live utilization widget. You can use endpoint <b>/v1/livedata/{device_id}/{metric} or /v1/livedata/{device_id}/{ipmi_metric</b> to retrieve live utilization. (metric contains memory_usage, cpu_usage, disk_usage, memory_info, disk_usage, disks_io_info, network_io_info, volumes_info; ipmi_metric is SYS_FAN1, 5VSB, etc ...)
+        
+        ### Utilization(24H) Widget
+        
+        According to above response, type is areachart, sub_type is utilization, and polling_type is historic mean that there is one 24H utilization widget. You can use endpoint <b>/v1/analysis/{device_type}/{device_id}/{metric_id}</b> to retrieve utilization.(metric_id 2 means Memory utilization; 1 means CPU utilization; 4 means Disk utilization)
+        
+        ### Device State Change Log Widget
+        
+        According to above response, type is grid, sub_type is device_state_change_log mean that there is one Device State Change Log Widget. You can use endpoint <b>/v1/analysis/device/statuschange</b> to retrieve information and display to user.
+        
+        ### Server Health Overview Widget
+        
+        According to above response, type is piedount, sub_type is device_status_summary mean that there is one Server Health Overview Widget. You can use endpoint <b>/v1/devices/status/all</b> to retrieve information and display to user.
+        
+        ### Shutdown Devices Widget
+        
+        According to above response, type is grid, sub_type is shutdown_devices mean that there is one Shutdown Devices Widget. You can use endpoint <b>/v1/analysis/device/shutdownlist</b> to retrieve information and display to user.
+
+        ### Network Utilization Widget (Live)
+        
+        According to above response, type is newareachart, sub_type is utilization, polling_type is live mean that there is one Network Utlitzation Widget. You can use endpoint <b>/v1/livedata/{device_id}/network_io_info</b> to retrieve information and display to user.
+        
+        ### Network Utilization Widget (24H)
+         According to above response, type is newareachart, sub_type is utilization, polling_type is historic mean that there is one Network Utlitzation Widget. You can use endpoint <b>/v1/analysis/qagent/{device_id}/{sensor_id_with_info}?&metric={metric_name}</b> to retrieve information and display to user.
+        
+      security:
+        - JWT: []
+      tags:
+        - Dashboard
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: dash_type
+          in: path
+          description: >- 
+            type of dashboard to fetch ("main", "kvmdash", "single")</br>
+            <b>main</b>: Dashboard. For more detail, please check your QRM+ website Dashboard page</br>
+            <b>kvmdash</b>: KVM Dashboard. For more detail, please check your QRM+ website IPMI KVM dashobard page </br>
+            <b>single</b>: The Dashboard of one specified device. For more detail, please check your QRM+ website. If dash_type is single, remember to add <b>device_id</b> parameter. </br>
+              For example: http://{{hostname}}:{{port}}{{PATH}}/api/v1/dashboards?&dash_type=single&device_id=2
+          required: true
+          type: string
+        - name: device_id
+          in: query
+          description: >- 
+            ID of device to fetch </br>
+            This field is required when dash_type is single.</br>
+            (The endpoint /v1/devices with GET method is able to retrieve device_id)
+          type: integer
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>ui_dashboard_id(integer)</b> - Dashboard ID for deifferent UI setting</br>
+            <b>dash_type(string)</b> - Dshboard type ("main", "kvmdash", "single") </br>
+            <b>layout(integer)</b> - Amount of widgets in single row (1, 2, 3) </br>
+            <b>widgets</b> - The set of string value about the widgets contained in dashboard</br>
+          schema:
+            $ref: '#/definitions/dashboards'
+        '400':
+          description: bad request
+        '401':
+          description: Unauthorized
+
+  /v1/kvm/deviceinfo:
+    post:
+      summary: Get encrypted device connection information for Remote Desktop Service
+      description: >-
+        This API is for connecting the device remote desktop and obtaining the
+        encrypted device connection info for Remote Desktop Service. </br>
+        example: After getting response from /v1/kvm/deviceinfo, user can type in following link: &quot;http://&lt;NAS_IP&gt;:&lt;NAS_Port&gt;/qrmplus/remote_desktop.html?qid=&lt;deviceinfo&gt;&quot;   in order to connect to the remote desktop.
+      security:
+        - JWT: []
+      tags:
+        - KVM
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: action
+          description: >-
+            <b>device_type(string)</b> - Device type ("ipmi")</br>
+            <b>device_id(integer)</b> - Device ID (The endpoint /v1/devices with GET method is able to retrieve device_id)</br>
+            <b>device_mark(string)</b> - Device secure key for connection (example: "192.168.1.2")</br> 
+            <b>ip(string)</b> - Device IP (example: "10.0.5.19")</br>
+            <b>port(string)</b> - Connection port (example: "8080")</br>
+            <b>secure_enable(integer)</b> - Secure connection is used or not. (0: not used, 1: used)
+          in: body
+          schema:
+            $ref: '#/definitions/kvm_deviceinfo'
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>device_info</b> - the string value of the connecting device information</br>
+          schema:
+            $ref: '#/definitions/kvm_deviceinfo_response'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /v1/remote/control:
+    post:
+      summary: Send command to remote device
+      description: This API is for sending command to remote device.
+      security:
+        - JWT: []
+      tags:
+        - Remote
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: request
+          description: >-
+            <b>jid(integer)</b> - Job ID. <b>You can generate Job ID by timestamp.</b></br>
+            <b>device_type(string)</b> - Device type ("ipmi", "qagent")</br>
+            <b>device_id(integer)</b> - Device ID (The endpoint /v1/devices with GET method is able to retrieve device_id)</br>
+            <b>device_mark(string)</b> - Device secure key for connection (The endpoint /v1/devices with GET method is able to retrieve device_mark)</br>
+            <b>ip(string)</b> - Device IP (example: "192.168.1.2")</br>
+            <b>remote_command(string)</b> -  Action required from the user. QRMAgent command ("shutdown", "reboot"); IPMI command ("on", "off", "reset", "cycle")
+          in: body
+          schema:
+            $ref: '#/definitions/remotemgt'
+      responses:
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /v1/system/info:
+    get:
+      summary: Get QTS port & security information
+      description: >-
+        This API is for getting the QTS port and security connection 
+        information.
+      tags:
+        - System
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK </br>
+            <b>http_port(integer)</b> -HTTP port</br>
+            <b>ssl_port(integer)</b> - SSL port</br>
+            <b>force_ssl(boolean)</b> - True means force SSL connection</br>
+            <b>stunnel_value(boolean)</b> - False means SSL connection isn't available</br>
+          schema:
+            $ref: '#/definitions/info'
+        '401':
+          description: Unauthorized
+  /v1/system/version:
+    get:
+      summary: Get Version
+      description: This API is for getting the QRM+ system information.
+      security:
+        - JWT: []
+      tags:
+        - System
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>version(string)</b> - Current QRM+ system version (example: "1.0.100")</br>
+            <b>date(string)</b> - Build date (format: "yyyy-mm-dd", example: "2018-01-08")</br>
+            <b>name(string)</b> - System name (example: "QRM+")</br>
+          schema:
+            $ref: '#/definitions/version'
+        '401':
+          description: Unauthorized
+  /v1/utils/ping:
+    post:
+      summary: Ping device
+      description: This API is for pinging the device. 
+      security:
+        - JWT: []
+      tags:
+        - Utils
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: action
+          description: >-
+            <b>host(string)</b> - Device&apos;s host name (example: "192.168.1.2")</br>
+            <b>timeout(integer)</b> - The executing time for endpoint /v1/utils/ping. Exceed this time result in timeout. (example: 10)</br>
+            <b>delay(integer)</b> - Get response after "Delay" time. (example: 0)</br>
+          in: body
+          schema:
+            $ref: '#/definitions/ping'
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>time</b> - the value of the time that the device responses after pinging</br>
+            Note: If timeout happens, the value of time is null.
+          schema:
+            $ref: '#/definitions/ping_response'
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad request
+  /v1/utils/traceroute:
+    post:
+      summary: Traceroute device
+      description: This API is for tracerouting the device.
+      security:
+        - JWT: []
+      tags:
+        - Utils
+      parameters:
+        - name: Authorization
+          description: >- 
+            User/Paword Authentication credentials in basic authentication format. (example: "bearer &lt;token&gt;")</br>
+            (The endpoint /v1/account/login with POST method is able to retrieve token)
+          in: header
+          required: true
+          type: string
+        - name: action
+          description: >-
+            <b>host(string)</b> - Device&apos;s host name (example: "192.168.1.2")</br>
+            <b>ttl(integer)</b> - TTL (example: 1)</br>
+            <b>port(integer)</b> - Port to traceroute the device (example: 8080)</br>
+          in: body
+          schema:
+            $ref: '#/definitions/traceroute'
+      responses:
+        '200':
+          description: >-
+            OK</br>
+            <b>route(string)</b> - Route used in traceroute process</br>
+            <b>ttl(integer)</b> - TTL number used in traceroute process</br>
+            <b>port(integer)</b> - Port used in traceroute process</br>
+            <b>done(boolean)</b> - Ture means the traceroute process is done</br>
+          schema:
+            $ref: '#/definitions/traceroute_response'
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bas request
+        '500':
+          description: Internal server error
+definitions:
+  about:
+    type: object
+    required:
+      - api_version
+    properties:
+      api_version:
+        type: string
+        example: "1.0.0"
+  add_user:
+    type: object
+    required:
+      - username
+      - email
+      - role
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      role:
+        type: string
+        enum:
+          - Admin
+          - Power User
+  delete_user:
+    type: object
+    required:
+      - user_id
+    properties:
+      user_id:
+        type: integer
+  update_user:
+    type: object
+    required:
+      - user_id
+    properties:
+      user_id:
+        type: integer
+      role:
+        type: string
+        enum:
+          - Admin
+          - Power User
+      start_notification:
+        type: string
+      tip:
+        type: string
+  user:
+    type: object
+    required:
+      - username
+      - user_id
+      - user_enable
+      - email
+      - role
+      - start_notification
+      - tip
+      - created_on
+      - last_login_time
+    properties:
+      username:
+        type: string
+      user_id:
+        type: integer
+      user_enable:
+        type: boolean
+      email:
+        type: string
+      role:
+        type: string
+        description: 'Null is QTS User, other is QRM user'
+      start_notification:
+        type: string
+      tip:
+        type: string
+      created_on:
+        type: string
+      last_login_time:
+        type: string
+  login_request:
+    type: object
+    required:
+      - user
+      - pwd
+    properties:
+      user:
+        type: string
+        example: "admin"
+      pwd:
+        type: string
+        example: "YWRtaW4="
+        description: It is Base64 encode string
+      security_code:
+        type: integer
+        example: 120018
+      security_answer:
+        type: string
+        example: "Billiards"
+      send_mail:
+        type: integer
+        example: 1
+  login_response_get:
+    type: object
+    properties:
+      authPassed:
+        type: boolean
+        example: true
+      is_qrm_user:
+        type: boolean
+        example: true
+      last_login_time:
+        type: string
+        example: "2018-03-16 14:55:51"
+      quick_start:
+        type: boolean
+        example: true
+      role:
+        type: string
+        example: "Admin"
+      token:
+        type: string
+        example: "<token>"
+        description: 'only for [Post]'
+      username:
+        type: string
+        example: "admin"
+  login_response:
+    type: object
+    properties:
+      authPassed:
+        type: boolean
+        example: true
+      is_qrm_user:
+        type: boolean
+        example: true
+      last_login_time:
+        type: string
+        example: "2018-03-16 14:55:51"
+      lost_phone:
+        type: integer
+        example: 1
+        description: 'only for [Post]'
+      need_2sv:
+        type: boolean
+        example: true
+        description: 'only for [Post]'
+      quick_start:
+        type: boolean
+        example: true
+      role:
+        type: string
+        example: "Admin"
+      security_question_no:
+        type: integer
+        example: 1
+        description: 'only for [Post]'
+      security_question_text:
+        type: string
+        description: 'only for [Post]'
+      send_result:
+        type: integer
+        example: 1
+        description: 'only for [Post]'
+      token:
+        type: string
+        example: "<token>"
+        description: 'only for [Post]'
+      username:
+        type: string
+        example: "admin"
+  agent_register:
+    type: object
+    required:
+      - jid
+    properties:
+      jid:
+        type: string
+      downloader:
+        type: string
+        description: Only for start register
+      os:
+        type: string
+        description: Only for start register
+      ip:
+        type: string
+        description: Only for start register
+      mac_address:
+        type: string
+        description: Only for start register
+  agent_info:
+    type: object
+    required:
+      - filename
+      - pkgname
+      - supports
+      - version
+    properties:
+      filename:
+        type: string
+      pkgname:
+        type: string
+      supports:
+        type: string
+      version:
+        type: string
+  alert_setting:
+    type: object
+    required:
+      - alert_setting_id
+      - alert_name
+      - alert_status
+      - alert_type
+      - sensor_id
+      - condition_symbol
+      - condition_value
+      - devices
+    properties:
+      alert_setting_id:
+        type: integer
+        example: 28
+      alert_name:
+        type: string
+        example: "IPMI Alert"
+      alert_status:
+        type: boolean
+      alert_type:
+        type: string
+        enum:
+          - ipmi
+          - qagent
+      sensor_id:
+        type: integer
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+      condition_symbol:
+        type: string
+        example: null
+      condition_value:
+        type: number
+        format: float
+        example: null
+      devices:
+        type: array
+        items:
+          type: object
+          properties:
+            device_id:
+              type: integer
+              example: 147
+            ip:
+              type: string
+              example: "192.168.1.1"
+            hostname:
+              type: string
+              example: "192.168.1.1"
+            device_tag:
+              type: string
+              example: null
+            mgmt_tech:
+              type: string
+              example: "ipmi"
+            brand:
+              type: string
+              example: "IEI Technology Corp."
+            model:
+              type: string
+              example: "unknown"
+            os:
+              type: string
+              example: "IPMI Management System"
+  add_alert_setting:
+    type: object
+    required:
+      - alert_name
+      - alert_type
+      - devices
+    properties:
+      alert_name:
+        type: string
+        example: "QRMAgent Alert"
+      alert_type:
+        type: string
+        example: "qagent"
+        enum:
+          - ipmi
+          - qagent
+      sensor_id:
+        type: integer
+        example: 2
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+      condition_symbol:
+        type: string
+        example: ">"
+      condition_value:
+        type: number
+        example: 5
+        format: float
+      devices:
+        type: array
+        items:
+          type: object
+          properties:
+            device_id:
+              type: integer
+              example: 246
+  delete_alert_setting:
+    type: object
+    required:
+      - alert_setting_id
+    properties:
+      alert_setting_id:
+        type: integer
+        example: 48
+  update_alert_settings:
+    type: object
+    required:
+      - alert_setting_id
+    properties:
+      alert_setting_id:
+        type: integer
+        example: 50
+      alert_name:
+        type: string
+        example: "QRMAgent Alert"
+      alert_status:
+        type: boolean
+        example: true
+      sensor_id:
+        type: integer
+        example: 4
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+      condition_symbol:
+        type: string
+        example: ">"
+      condition_value:
+        type: number
+        example: 50
+        format: float
+      devices:
+        type: array
+        items:
+          type: object
+          properties:
+            device_id:
+              type: integer
+              example: 246
+  dashboards:
+    type: object
+    required:
+      - dash_type
+      - layout
+      - widgets
+    properties:
+      ui_dashboard_id:
+        type: integer
+        example: 5
+      dash_type:
+        type: string
+        example: "main"
+      layout:
+        type: integer
+        example: 3
+      widgets:
+        type: object
+  delete_dashboard:
+    type: object
+    required:
+      - dashboard_id
+    properties:
+      dashboard_id:
+        type: integer
+  set_dashboard:
+    type: object
+    required:
+      - dash_type
+      - layout
+      - widgets
+    properties:
+      dash_type:
+        type: string
+      device_id:
+        type: integer
+      layout:
+        type: integer
+      widgets:
+        type: string
+  delete_notifications:
+    type: object
+    required:
+      - device_type
+    properties:
+      device_type:
+        type: string
+        enum:
+          - ipmi
+          - qagent
+  ipmi_data:
+    type: object
+    required:
+      - Description
+      - Sensor_Name
+      - Sensor_Type
+      - Time_Stamp
+      - alert_name
+      - alert_setting_devices_id
+      - alert_setting_id
+      - alert_status
+      - alert_type
+      - date_time
+      - device_id
+      - ip
+    properties:
+      Description:
+        type: string
+      Sensor_Name:
+        type: string
+      Sensor_Type:
+        type: string
+      Time_Stamp:
+        type: string
+      alert_name:
+        type: string
+      alert_setting_devices_id:
+        type: integer
+      alert_setting_id:
+        type: integer
+      alert_status:
+        type: integer
+      alert_type:
+        type: string
+      date_time:
+        type: string
+      device_id:
+        type: integer
+      ip:
+        type: string
+  qagent_data:
+    type: object
+    required:
+      - condition_symbol
+      - alert_type
+      - on_time
+      - ip
+      - alert_name
+      - sensor_id
+      - alert_setting_id
+      - alert_setting_devices_id
+      - condition_value
+      - alert_status
+      - parameter
+      - device_id
+    properties:
+      condition_symbol:
+        type: string
+      alert_type:
+        type: string
+      on_time:
+        type: string
+      ip:
+        type: string
+      alert_name:
+        type: string
+      sensor_id:
+        type: integer
+      alert_setting_id:
+        type: integer
+      alert_setting_devices_id:
+        type: integer
+      condition_value:
+        type: integer
+      alert_status:
+        type: integer
+      parameter:
+        type: string
+      device_id:
+        type: integer
+  metric_data:
+    required:
+      - metric
+      - command
+      - result
+      - value
+    properties:
+      metric:
+        type: string
+      command:
+        type: string
+      result:
+        type: integer
+      value:
+        type: integer
+  attachment_data:
+    type: object
+    required:
+      - log_level
+      - ip
+      - content
+      - device_mark
+      - device_id
+    properties:
+      log_level:
+        type: string
+      ip:
+        type: string
+      content:
+        type: string
+      device_mark:
+        type: string
+      device_id:
+        type: integer
+      metrics:
+        type: array
+        items:
+          $ref: '#/definitions/metric_data'
+  background_data:
+    type: object
+    required:
+      - task_dev_count
+      - jid
+      - task_name
+      - task_status
+      - task_detail
+    properties:
+      task_dev_count:
+        type: integer
+      jid:
+        type: string
+      task_name:
+        type: string
+      task_status:
+        type: string
+      task_detail:
+        type: string
+      attachment:
+        type: array
+        items:
+          $ref: '#/definitions/attachment_data'
+  response_notifications:
+    type: object
+    required:
+      - notification
+      - backgroundtask
+    properties:
+      notification:
+        type: object
+        required:
+          - totals
+          - refresh
+        properties:
+          ipmi_datas:
+            type: array
+            items:
+              $ref: '#/definitions/ipmi_data'
+          qagent_datas:
+            type: array
+            items:
+              $ref: '#/definitions/qagent_data'
+          totals:
+            type: integer
+          refresh:
+            type: boolean
+      backgroundtask:
+        type: object
+        required:
+          - timestamp
+          - refresh
+        properties:
+          datas:
+            type: array
+            items:
+              $ref: '#/definitions/background_data'
+          timestamp:
+            type: integer
+          refresh:
+            type: boolean
+  gateway:
+    type: object
+    required:
+      - changed
+    properties:
+      changed:
+        type: boolean
+  notification_frequency:
+    type: object
+    properties:
+      alert:
+        type: string
+      mail:
+        type: string
+  scan_frequency:
+    type: object
+    properties:
+      historic:
+        type: string
+      live:
+        type: string
+  smtp:
+    type: object
+    required:
+      - host
+      - email
+    properties:
+      host:
+        type: string
+        description: >-
+          [get/put] required for Gmail, Yahoo, QQ, QQ VIP, 网易126, 网易163, PCHome,
+          Custom
+      port:
+        type: string
+        description: '[get/put] required for Custom'
+      email:
+        type: string
+        description: >-
+          [get/put] required for Gmail, Yahoo, QQ, QQ VIP, 网易126, 网易163, PCHome,
+          Custom
+      encrypt:
+        type: string
+        description: '[get/put] required for Custom'
+      username:
+        type: string
+        description: '[get/put] only for Custom'
+      password:
+        type: string
+        description: '[put] required for Yahoo, QQ, QQ VIP, 网易126, 网易163, PCHome'
+  retention:
+    type: object
+    properties:
+      alarm_log:
+        type: string
+      ipmi_event_log:
+        type: string
+      kvm_video_recordings:
+        type: string
+      parameter_log:
+        type: string
+      system_log:
+        type: string
+  file:
+    type: object
+    required:
+      - data
+      - filename
+    properties:
+      data:
+        type: string
+        description: Base64 encode data
+      filename:
+        type: string
+  mail:
+    type: object
+    required:
+      - to
+    properties:
+      to:
+        type: string
+      subject:
+        type: string
+      text:
+        type: string
+      files:
+        type: array
+        items:
+          $ref: '#/definitions/file'
+  info:
+    type: object
+    properties:
+      http_port:
+        type: integer
+        example: 8080
+      ssl_port:
+        type: integer
+        example: 443
+      force_ssl:
+        type: boolean
+        example: false
+      stunnel_value:
+        type: boolean
+        example: true
+  setting:
+    type: object
+    properties:
+      notification_frequency:
+        $ref: '#/definitions/notification_frequency'
+      scan_frequency:
+        $ref: '#/definitions/scan_frequency'
+      smtp:
+        $ref: '#/definitions/smtp'
+      retention:
+        $ref: '#/definitions/retention'
+  version:
+    type: object
+    required:
+      - version
+      - date
+      - name
+    properties:
+      version:
+        type: string
+        example: "1.0.100"
+      date:
+        type: string
+        example: "2018-03-16"
+      name:
+        type: string
+        example: "QRM+"
+  scan:
+    type: object
+    required:
+      - jid
+      - task_detail
+    properties:
+      jid:
+        type: string
+      task_detail:
+        $ref: '#/definitions/scan_type'
+      ip_start:
+        type: string
+      ip_end:
+        type: string
+      percent:
+        type: number
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/device_info'
+  scan_type:
+    type: string
+    enum:
+      - scan
+      - scan_only_ipmi
+  device_info:
+    type: object
+    properties:
+      device_id:
+        type: number
+        example: 2
+      device_ip:
+        type: string
+        example: "192.168.1.1"
+      device_type:
+        type: string
+        example: qagent
+      device_tag:
+        type: string
+        example: ""
+      device_mark:
+        type: string
+        example: "192.168.1.1_176908"
+      hostname:
+        type: string
+        example: "HostName"
+      mgmt_tech:
+        type: string
+        example: "qagent"
+      os:
+        type: string
+        example: "Ubuntu"
+      brand:
+        type: string
+        example: "QEMU"
+      model:
+        type: string
+        example: "Intel Core i7 (Nehalem Class Cor"
+      role:
+        type: string
+        example: "Device"
+      network_block:
+        type: string
+        example: "192.168.1.1/23"
+      error_code:
+        type: number
+        example: 0
+      distance:
+        type: number
+        example: 0
+      status:
+        type: number
+        example: 1
+        description: '{-1:"not_reach", 0:"off", 1:"on", 3:"install_fail", 4:"installing"}'
+      hide_status:
+        type: number
+        example: 1
+      monitor_status:
+        type: number
+        example: 0
+        description: '{0:"installed", 1:"uninstalled", 2:"installing", 3:"system checking"}'
+  device_update:
+    type: object
+    required:
+      - device_tag
+    properties:
+      device_tag:
+        type: string
+  device_detail:
+    type: object
+    required:
+      - info
+      - network
+    properties:
+      info:
+        type: array
+        items:
+          type: object
+          properties:
+            kernel:
+              type: string
+              example: "Linux"
+            Physical_Mem:
+              type: string
+              example: "993"
+            Hostname:
+              type: string
+              example: "HostName"
+            CPU_Model:
+              type: string
+              example: "Intel Core i7 (Nehalem Class Core i7)"
+            os_family:
+              type: string
+              example: "Debian"
+            sync_file:
+              type: string
+              example: ""
+            num_gpus:
+              type: string
+              example: "1"
+            Kernel_Version:
+              type: string
+              example: "3.19.0-25-generic"
+            num_cpus:
+              type: string
+              example: "1"
+            cpuarch:
+              type: string
+              example: "x86_64"
+            os_release:
+              type: string
+              example: "14.04"
+            Qagent_Version:
+              type: string
+              example: "1.0.001"
+            os:
+              type: string
+              example: "Ubuntu"
+            Brand:
+              type: string
+              example: "QEMU"
+            localhost:
+              type: string
+              example: "LocalHost"
+      network:
+        type: array
+        items:
+          type: object
+          properties:
+            IP4_IPAddress:
+              type: string
+              example: "192.168.1.1"
+            IP6_IPAddress:
+              type: string
+              example: "aa00::1122:bb:cc33:4455"
+            interfaces_name:
+              type: string
+              example: "eth0"
+            Network_Interface:
+              type: string
+              example: "00:11:22:33:44:55"
+      fru:
+        type: array
+        items:
+          type: object
+          example:  null
+  device_sensors:
+    type: object
+    required:
+      - sensor_type
+      - metric
+      - sensors_id
+    properties:
+      sensor_type:
+        type: string
+        example: "Fan"
+      metric:
+        type: string
+        example: "SYS_FAN1"
+      sensors_id:
+        type: number
+        example: 11
+  device_metric_ipmi:
+    type: array
+    items:
+      type: object
+      properties:
+        ipmi_sensors_id:
+          type: number
+          example: 4
+        Lower_Critical:
+          type: string
+          example: "4.687"
+        Lower_Non_Critical:
+          type: string
+          example: "4.815"
+        Lower_Non_Recoverable:
+          type: string
+          example: "4.495"
+        Unit:
+          type: string
+          example: "Volts"
+        Upper_Critical:
+          type: string
+          example: "5.263"
+        Upper_Non_Critical:
+          type: string
+          example: "5.135"
+        Upper_Non_Recoverable:
+          type: string
+          example: "5.455"
+  device_metric_qagent:
+    type: array
+    items:
+      type: string
+  scan_list:
+    type: object
+    properties:
+      jid:
+        type: string
+      task_status:
+        type: string
+      percent:
+        type: number
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/device_info'
+  scan_history_list:
+    type: array
+    items:
+      $ref: '#/definitions/scan_history'
+  scan_history:
+    type: object
+    properties:
+      jid:
+        type: string
+      arrangement:
+        type: number
+      percent:
+        type: number
+      scan_by:
+        type: string
+      scan_range:
+        type: string
+      scan_type:
+        type: string
+      start_time:
+        type: string
+      status:
+        type: string
+  scan_history_list_by_jid:
+    type: array
+    items:
+      $ref: '#/definitions/device_info'
+  devicemgt:
+    type: object
+    properties:
+      jid:
+        type: string
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/device_info'
+  devicemgt_custom:
+    type: object
+    properties:
+      jid:
+        type: string
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/devicemgt_add_device'
+  devicemgt_add_device:
+    type: object
+    properties:
+      ip:
+        type: string
+      hostname:
+        type: string
+      mgmt_tech:
+        type: string
+      os:
+        type: string
+      brand:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+  device_list:
+    type: object
+    properties:
+      total:
+        type: number
+        example: 9
+      datas:
+        type: array
+        items:
+          $ref: '#/definitions/device_info'
+  device_status_list:
+    type: array
+    items:
+      $ref: '#/definitions/device_status'
+  device_status:
+    type: object
+    properties:
+      device_id:
+        type: string
+      error_code:
+        type: number
+      monitor_status:
+        type: number
+        description: '{0:"installed", 1:"uninstalled", 2:"installing", 3:”system checking”}'
+      status:
+        type: number
+        description: '{0:off, 1:on, 2:not reachable}'
+  get_device_rdp:
+    type: object
+    properties:
+      device_id:
+        type: integer
+      device_mark:
+        type: string
+      windows_version:
+        type: string
+  set_device_rdp:
+    type: object
+    properties:
+      device_id:
+        type: integer
+      device_mark:
+        type: string
+      rdp_value:
+        type: integer
+      windows_version:
+        type: string
+  get_devices_rdp:
+    type: object
+    properties:
+      jid:
+        type: integer
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/get_device_rdp'
+  set_devices_rdp:
+    type: object
+    properties:
+      jid:
+        type: integer
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/set_device_rdp'
+  device_status_all:
+    type: object
+    properties:
+      not_reach:
+        type: number
+        example: 0
+      'off':
+        type: number
+        example: 1
+      'on':
+        type: number
+        example: 8
+  remotemgt:
+    type: object
+    required:
+      - remote_command
+      - devices
+    properties:
+      jid:
+        type: integer
+        example: 1521512669953
+      device_type:
+        type: string
+        example: "qagent"
+        enum:
+          - qagent
+          - ipmi
+      remote_command:
+        type: string
+        example: "reboot"
+        enum:
+          - on
+          - cycle
+          - shutdown
+          - reboot
+          - off
+          - reset
+      devices:
+        type: array
+        items:
+          $ref: '#/definitions/remotemgt_device_info'
+  remotemgt_device_info:
+    type: object
+    required:
+      - device_id
+    properties:
+      ip:
+        type: string
+        example: "192.168.1.1"
+      device_id:
+        type: integer
+        example: 246
+      device_mark:
+        type: string
+        example: "192.168.1.1_275512"
+  analysis_ipmi_history:
+    type: object
+    properties:
+      datas:
+        type: array
+        items:
+          type: object
+          properties:
+            20180316103805:
+              type: string
+              example: "1.295"
+      lower_bound:
+        type: string
+        example: "1.231"
+      upper_bound:
+        type: string
+        example: "2.063"
+      unit:
+        type: string
+        example: "Volts"
+  analysis_qagent_info_history:
+    type: object
+    properties:
+      columns:
+        type: string
+        example: ["write_bytes", "read_count", "write_count", "read_time", "read_bytes", "write_time"]
+      datas:
+        type: array
+        items:
+          type: object
+          properties:
+            20180316103412:
+              type: string
+              example: ["0", "0", "0", "0", "0", "0"]
+      name:
+        type: string
+        example: "sr0"
+  analysis_recentutil:
+    type: object
+    properties:
+      device_id:
+        type: number
+        example: 140
+      device_ip:
+        type: string
+        example: "192.168.1.1"
+      device_tag:
+        type: string
+        example: ""
+      hostname:
+        type: string
+        example: "HostName"
+      value:
+        type: string
+        example: "5.00"
+  analysis_statuschange_list:
+    type: array
+    items:
+      type: object
+      properties:
+        device_id:
+          type: number
+          example: 140
+        device_ip:
+          type: string
+          example: "192.168.1.1"
+        device_tag:
+          type: string
+          example: ""
+        hostname:
+          type: string
+          example: "HostName"
+        start_time:
+          type: string
+          example: "2018-03-16 15:13:52"
+        status:
+          type: number
+          example: 1
+          description: '{0:off ,1:on ,2:not reachable}'
+  analysis_shutdownlist_list:
+    type: array
+    items:
+      type: object
+      properties:
+        device_id:
+          type: number
+          example: 140
+        device_ip:
+          type: string
+          example: "192.168.1.1"
+        device_tag:
+          type: string
+          example: ""
+        device_type:
+          type: string
+          example: "qagent"
+        hostname:
+          type: string
+          example: "HostName"
+        last_updated:
+          type: string
+          example: "2018-03-16 17:28:00"
+  analysis_multimonitor_list:
+    type: array
+    items:
+      type: object
+      properties:
+        device_id:
+          type: number
+          example: 145
+        device_ip:
+          type: string
+          example: "192.168.1.1"
+        cpu_usage:
+          type: string
+          example: "2.50"
+        memory_usage:
+          type: string
+          example: "49.20"
+        disk_usage:
+          type: string
+          example: "1.60"
+  system_logs:
+    type: object
+    properties:
+      datas:
+        type: array
+        items:
+          $ref: '#/definitions/system_log'
+      total:
+        type: number
+  system_log:
+    type: object
+    properties:
+      category:
+        type: string
+      content:
+        type: string
+      date:
+        type: string
+      log_level:
+        type: string
+      server:
+        type: string
+      time:
+        type: string
+      user_name:
+        type: string
+  alerts_logs:
+    type: object
+    properties:
+      datas:
+        type: array
+        items:
+          $ref: '#/definitions/alerts_log'
+      total:
+        type: number
+        example: 46
+      enable_count:
+        type: number
+        example: 3
+  alerts_log:
+    type: object
+    properties:
+      off_time:
+        type: string
+        example: "2018-03-16 10:49:22"
+      on_time:
+        type: string
+        example: "2018-03-16 10:49:12"
+      description:
+        type: string
+        example: "memory_usage > 5%"
+      alert_status:
+        type: string
+        example: "0"
+        description: '{0:off, 1:on}'
+      device_ip:
+        type: string
+        example: "192.168.1.1"
+      hostname:
+        type: string
+        example: "HostName"
+      device_tag:
+        type: string
+        example: null
+      parameter:
+        type: string
+        example: "memory_usage"
+  event_logs:
+    type: object
+    properties:
+      datas:
+        type: array
+        items:
+          $ref: '#/definitions/event_log'
+      total:
+        type: number
+        example: 661
+  event_log:
+    type: object
+    properties:
+      time_stamp:
+        type: string
+        example: "2018-03-16 16:56:34"
+      date_time:
+        type: string
+        example: "2018-03-16 16:56:48"
+      description:
+        type: string
+        example: "Lower Critical going low"
+      device_id:
+        type: string
+        example: "147"
+      device_ip:
+        type: string
+        example: "192.168.1.1"
+      hostname:
+        type: string
+        example: "HostName"
+      device_tag:
+        type: string
+        example: null
+      sensor_type:
+        type: string
+        example: "Voltage"
+      metric:
+        type: string
+        example: "DDR3"
+  kvm_recording_control_body:
+    type: object
+    properties:
+      jid:
+        type: string
+      action:
+        type: string
+        description: 'ikvm_add_url,ikvm_remove_url, ikvm_start_record, ikvm_stop_record'
+      devices:
+        type: array
+        items:
+          type: object
+          properties:
+            device_id:
+              type: string
+  kvm_recording_list:
+    type: array
+    items:
+      $ref: '#/definitions/kvm_recording'
+  kvm_recording:
+    type: object
+    properties:
+      device_id:
+        type: number
+      device_ip:
+        type: string
+      device_tag:
+        type: string
+      hostname:
+        type: string
+      mgmt_tech:
+        type: string
+      os:
+        type: string
+      brand:
+        type: string
+      ipmi_kvm_info_id:
+        type: number
+      recording_since:
+        type: number
+        description: 'format: timestamp'
+      recording_status:
+        type: number
+        description: '0:off, 1:on, 2:updating'
+  add_kvm_recording_list:
+    type: array
+    items:
+      $ref: '#/definitions/add_kvm_recording'
+  add_kvm_recording:
+    type: object
+    properties:
+      device_id:
+        type: number
+      ipmi_kvm_info_id:
+        type: number
+  add_kvm_recording_body:
+    type: object
+    properties:
+      devices:
+        type: array
+        items:
+          type: object
+          properties:
+            device_id:
+              type: number
+  remove_kvm_recording_body:
+    type: object
+    properties:
+      devices:
+        type: array
+        items:
+          type: object
+          properties:
+            device_id:
+              type: number
+            ip:
+              type: string
+            brand:
+              type: string
+  kvm_data_list:
+    type: array
+    items:
+      $ref: '#/definitions/kvm_data'
+  kvm_data:
+    type: object
+    properties:
+      device_id:
+        type: number
+      device_ip:
+        type: string
+      img_url:
+        type: string
+        description: 'ex: /qrmplus/resources/KVMimages/217/0.jpeg'
+      vnc_url:
+        type: string
+        description: 'ex: 10.0.5.14'
+      vnc_error:
+        type: number
+  kvm_available_dates:
+    type: array
+    items:
+      type: string
+      description: 'ex: 20170502'
+  kvm_playback_device_id_list:
+    type: array
+    items:
+      type: object
+      properties:
+        device_id:
+          type: string
+  kvm_playback:
+    type: object
+    properties:
+      result:
+        type: array
+        items:
+          $ref: '#/definitions/kvm_playback_list'
+      videopath:
+        type: string
+  kvm_playback_list:
+    type: object
+    properties:
+      filepath:
+        type: string
+      time:
+        type: array
+        items:
+          type: number
+          description: '[starting seconds of playback time, ending seconds of playback time]'
+  kvm_deviceinfo:
+    type: object
+    required:
+      - device_id
+      - device_mark
+      - ip
+      - port
+      - secure_enable
+    properties:
+      device_type:
+        type: string
+        example: "qagent"
+        enum:
+          - ipmi
+          - qagent
+      device_id:
+        type: integer
+        example: 247
+      device_mark:
+        type: string
+        example: "192.168.1.1"
+      hostname:
+        type: string
+        example: "HostName"
+      ip:
+        type: string
+        example: "10.0.0.1"
+      os:
+        type: string
+        example: "linuxvnc" 
+      password:
+        type: string
+        example: "YWRtaW4="
+      port:
+        type: string
+        example: "8080"
+      secure_enable:
+        type: integer
+        example: 0
+      username:
+        type: string
+        example: "admin"
+  kvm_deviceinfo_response:
+    type: object
+    properties:
+      device_info:
+        type: string
+        example: "<device_info>"
+  push_register:
+    type: object
+    properties:
+      udid:
+        type: string
+        description: obtained from Android/iOS APIs. used to uniquely identify it.
+      reg_id:
+        type: string
+        description: The GCM registration id or the APNS token for the device
+      protocol:
+        type: string
+        enum:
+          - apns
+          - gcm
+  push_unregister:
+    type: object
+    properties:
+      udid:
+        type: string
+        description: obtained from Android/iOS APIs. used to uniquely identify it.
+  live_data:
+    type: object
+    properties:
+      time:
+        type: string
+        example: "2018-03-16 18:06:52"
+        description: 'ex:2017-06-15 11:28:54'
+      metrics:
+        type: array
+        items:
+          type: object
+  live_data_cpu:
+    type: object
+    properties:
+      time:
+        type: string
+        example: "2018-03-16 18:06:52"
+        description: 'ex:2017-06-15 11:28:54'
+      metrics:
+        type: array
+        $ref: '#/definitions/live_qagent_metric_cpu'
+  live_data_mem:
+    type: object
+    properties:
+      time:
+        type: string
+        example: "2018-03-16 18:06:52"
+        description: 'ex:2017-06-15 11:28:54'
+      metrics:
+        type: array
+        $ref: '#/definitions/live_qagent_metric_mem'
+  live_data_disk:
+    type: object
+    properties:
+      time:
+        type: string
+        example: "2018-03-16 18:06:52"
+        description: 'ex:2017-06-15 11:28:54'
+      metrics:
+        type: array
+        $ref: '#/definitions/live_qagent_metric_data1'
+  live_data2:
+    type: object
+    properties:
+      time:
+        type: string
+        example: "2018-03-16 18:06:52"
+        description: 'ex:2017-06-15 11:28:54'
+      metrics:
+        type: array
+        $ref: '#/definitions/live_qagent_metric_data2'
+  live_data3:
+    type: array
+    items:
+      type: object
+      properties:
+        time:
+          type: string
+          example: "2018-03-16 18:06:52"
+          description: 'ex:2017-06-15 11:28:54'
+        metrics:
+          type: array
+          $ref: '#/definitions/live_qagent_metric_data3'
+  live_data4:
+    type: array
+    items:
+      type: object
+      properties:
+        time:
+          type: string
+          example: "2018-03-16 18:06:52"
+          description: 'ex:2017-06-15 11:28:54'
+        metrics:
+          type: array
+          $ref: '#/definitions/live_qagent_metric_data4'
+  live_data5:
+    type: array
+    items:
+      type: object
+      properties:
+        time:
+          type: string
+          example: "2018-03-16 18:06:52"
+          description: 'ex:2017-06-15 11:28:54'
+        metrics:
+          type: array
+          $ref: '#/definitions/live_qagent_metric_data5'
+  live_qagent_metric_cpu:
+    type: object
+    properties:
+      metric:
+        type: string
+        example:  cpu_usage
+        description: "cpu_usage"
+      value:
+        type: number
+        example: 34.6
+  live_qagent_metric_mem:
+    type: object
+    properties:
+      metric:
+        type: string
+        example:  memory_usage
+        description: "memory_usage"
+      value:
+        type: number
+        example: 34.6
+  live_qagent_metric_data1:
+    type: object
+    properties:
+      metric:
+        type: string
+        example: disk_usage
+        description: "disk_usage"
+      value:
+        type: number
+        example: 34.6
+  live_qagent_metric_data2:
+    type: object
+    properties:
+      metric:
+        type: string
+        example: "memory_info"
+      value:
+        type: array
+        $ref: '#/definitions/live_qagent_metric_memory_info'
+  live_qagent_metric_memory_info:
+    type: object
+    properties:
+      available:
+        type: number
+        example: 1404133376
+      total:
+        type: number
+        example: 2146951168
+      used:
+        type: number
+        example: 742817792
+      free:
+        type: number
+        example: 1404133376
+      _usage:
+        type: number
+        example: 34.6
+  live_qagent_metric_data3:
+    type: object
+    properties:
+      metric:
+        type: string
+        example: "disks_io_info"
+      value:
+        type: array
+        $ref: '#/definitions/live_qagent_metric_disks_io_info'
+  live_qagent_metric_disks_io_info:
+    type: object
+    properties:
+      write_bytes:
+        type: number
+        example: 1024
+      name:
+        type: string
+        example: "PhysicalDrive0"
+      read_count:
+        type: number
+        example: 101493
+      write_count:
+        type: number
+        example: 531629
+      read_time:
+        type: number
+        example: 77903660
+      read_bytes:
+        type: number
+        example: 0
+      write_time:
+        type: number
+        example: 413251590
+  live_qagent_metric_data4:
+    type: object
+    properties:
+      metric:
+        type: string
+        example: "network_io_info"
+      value:
+        type: array
+        $ref: '#/definitions/live_qagent_metric_network_io_info'
+  live_qagent_metric_network_io_info:
+    type: object
+    properties:
+      bytes_sent:
+        type: number
+        example: 0
+      name:
+        type: string
+        example: "Teredo Tunneling Pseudo-Interface"
+      bytes_recv:
+        type: number
+        example: 0
+  live_qagent_metric_data5:
+    type: object
+    properties:
+      metric:
+        type: string
+        example: "volumes_info"
+      value:
+        type: array
+        $ref: '#/definitions/live_qagent_metric_volumes_info'
+  live_qagent_metric_volumes_info:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "C:"
+      used:
+        type: number
+        example: 23708786688
+      free:
+        type: number
+        example: 244619710464
+      total:
+        type: number
+        example: 268328497152
+      percent: 
+        type: number
+        example: 8.8
+  live_ipmi_metric_data:
+    type: object
+    properties:
+      metric:
+        type: array
+        $ref: '#/definitions/live_ipmi_metric'
+      type_name:
+        type: string
+        example: "ipmi"
+      time:
+        type: string
+        example: "2018-03-16 18:25:25"
+  live_ipmi_metric:
+    type: object
+    properties:
+      Status:
+        type: string
+        example: "Normal"
+      Upper_Non_Critical:
+        type: string
+        example: "64.000"
+      Lower_Non_Critical:
+        type: string
+        example: "16.000"
+      metric:
+        type: string
+        example: "SYS_TEMP1"
+      Lower_Critical:
+        type: string
+        example: "5.000"
+      value:
+        type: string
+        example: "37.000"
+      Upper_Non_Recoverable:
+        type: string
+        example: "100.000"
+      Upper_Critical:
+        type: string
+        example: "80.000"
+      Lower_Non_Recoverable:
+        type: string
+        example: "0.000"
+      Unit:
+        type: string
+        example: "degrees C"
+  ping:
+    type: object
+    required:
+      - host
+    properties:
+      host:
+        type: string
+        example: "192.168.1.1"
+      timeout:
+        type: integer
+        example: 10
+        description: 'Default:2'
+      delay:
+        type: integer
+        example: 0
+        description: 'Default:1'
+  ping_response:
+    type: object
+    properties:
+      time:
+        type: number
+        example: 0.0006079673767089844
+        description: 'Unit:Second'
+  remoteaddress_response:
+    type: object
+    properties:
+      remote_address:
+        type: string
+  session:
+    type: object
+    required:
+      - session_statuses
+    properties:
+      session_statuses:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/session_status'
+  session_status:
+    type: object
+    required:
+      - type
+    properties:
+      single_device_id:
+        type: integer
+      config:
+        type: string
+      type:
+        type: string
+  traceroute:
+    type: object
+    required:
+      - host
+      - ttl
+    properties:
+      host:
+        type: string
+        example: "192.168.1.1"
+      ttl:
+        type: integer
+        example: 1
+        description: initial value is 1
+      port:
+        type: integer
+        example: 33521
+        description: 'required when ttl != 1, value is random in range(33434, 33535)'
+  traceroute_response:
+    type: object
+    properties:
+      route:
+        type: string
+        example: "192.168.1.1 (192.168.1.1)"
+      ttl:
+        type: integer
+        example: 22
+        description: >-
+          If ttl > 30(Linux default max hops), maybe need show can not found
+          message for user
+      port:
+        type: integer
+        example: 33521
+      done:
+        type: boolean
+        example: true
