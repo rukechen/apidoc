@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: QRM+ APIs
   termsOfService: SW10(Ateam)
-  version: "1.0(2018.04.20)"
+  version: "1.0(2018.06.12)"
   description: >-
     # Authentication
       Most QRM+ API operations require an authorization context and user permissions. Users are identified by an authentication token attached to the request headers.
@@ -1043,6 +1043,34 @@ paths:
           description: Unauthorized
         '400':
           description: Bad request
+  '/v1/alert/setting/status':
+    put:
+      summary: Update alert setting status
+      description: This API is for updating the alert status based on <b>alert_setting_id.
+      security:
+        - JWT: []
+      tags:
+        - Alert
+      parameters:
+        - name: action
+          description: >-
+            <b>alert_status(boolean)</b> - Alert status</br>
+            <b>alert_setting_ids(array)</b> - Alert setting ID</br>
+          in: body
+          schema:
+            type: object
+            properties:
+              alert_status:
+                type: boolean
+              alert_setting_ids:
+                type: array
+                items:
+                  type: number
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: 'bad request'
   /v1/logs/alert:
     get:
       summary: Get QRMAgent alert log
@@ -1075,6 +1103,25 @@ paths:
           in: query
           description: The amount of logs shown in one page (default limit is 50)
           type: number
+        - name: alert_status
+          in: query
+          description: default alert_status is None
+          type: number
+        - name: order_by
+          in: query
+          description: default alert_status is None
+          type: string
+          enum:
+            - alert_status
+            - device_id
+            - sensor_id
+        - name: sort
+          in: query
+          description: default is desc
+          type: string
+          enum:
+            - asc
+            - desc
       responses:
         '200':
           description: >-
@@ -1132,6 +1179,25 @@ paths:
           in: query
           description: The amount of logs shown in one page (default limit is 50)
           type: number
+        - name: alert_status
+          in: query
+          description: default alert_status is None
+          type: number
+        - name: order_by
+          in: query
+          description: default alert_status is None
+          type: string
+          enum:
+            - alert_status
+            - device_id
+            - sensor_id
+        - name: sort
+          in: query
+          description: default is desc
+          type: string
+          enum:
+            - asc
+            - desc
       responses:
         '200':
           description: >-
@@ -1195,6 +1261,25 @@ paths:
           in: query
           description: The amount of logs shown in one page (default limit is 50)
           type: number
+        - name: alert_status
+          in: query
+          description: default alert_status is None
+          type: number
+        - name: order_by
+          in: query
+          description: default alert_status is None
+          type: string
+          enum:
+            - alert_status
+            - device_id
+            - sensor_id
+        - name: sort
+          in: query
+          description: default is desc
+          type: string
+          enum:
+            - asc
+            - desc
       responses:
         '200':
           description: >-
@@ -1766,7 +1851,7 @@ paths:
           required: true
           type: string
         - name: dash_type
-          in: path
+          in: query
           description: >- 
             type of dashboard to fetch ("main", "kvmdash", "single")</br>
             <b>main</b>: Dashboard. For more detail, please check your QRM+ website Dashboard page</br>
@@ -2096,7 +2181,10 @@ definitions:
       pwd:
         type: string
         example: "YWRtaW4="
-        description: It is Base64 encode string
+        description: It is Base64 encode string. If qtoken exist, pwd is not needed.
+      qtoken:
+        type: string
+        description: If pwd exist, qtoken is not needed.
       security_code:
         type: integer
         example: 120018
@@ -3298,6 +3386,9 @@ definitions:
   alerts_log:
     type: object
     properties:
+      alert_setting_id:
+        type: integer
+        example: 30
       off_time:
         type: string
         example: "2018-03-16 10:49:22"
@@ -3323,6 +3414,9 @@ definitions:
       parameter:
         type: string
         example: "memory_usage"
+      device_id:
+        type: integer
+        example: 2
   event_logs:
     type: object
     properties:
